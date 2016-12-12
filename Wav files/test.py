@@ -14,7 +14,7 @@ for wav_file in wav_list:
 	X = np.fft.fft(data,16384)
 	# abcd.plotstft(wav_file)
 	plt.plot(abs(X)/max(abs(X)))
-	plt.show()
+	# plt.show()
 	# print('File:', wav_file)
 	# print(len(data))
 	wf.close()
