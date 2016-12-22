@@ -45,8 +45,7 @@ for wav_file in wav_list_bread:
 	wf.close()
 
 np.array(output_bread)
-# a = np.vstack(mfcc_feat_anything,mfcc_feat_bread)
-# print(a.shape)
+
 output = [0 for k in range(len(output_anything)+len(output_bread))]
 
 for j in range(len(output)):
@@ -58,7 +57,6 @@ for j in range(len(output)):
 y = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ]
 
 
-# print(len(output))
 
 temp_X_test = np.array([output[2*i] for i in range(int(len(output)/2))])
 Y_test =  [y[2*i] for i in range(int(len(y)/2))]
@@ -68,11 +66,9 @@ Y_train = [y[2*i+1] for i in range(int(len(y)/2))]
 
 dataset_size_train = len(temp_X_train)
 X_train = temp_X_train.reshape(dataset_size_train,-1)
-# Y_train = temp_Y_train.reshape(dataset_size_train,-1)
 
 dataset_size_test = len(temp_X_test)
 X_test = temp_X_test.reshape(dataset_size_test,-1)
-# Y_test = temp_Y_test.reshape(dataset_size_test,-1)
 
 np.array(X_train)
 np.array(X_test)
@@ -81,11 +77,11 @@ np.array(Y_test)
 
 
 
-clf = AdaBoostClassifier(None,n_estimators=100, learning_rate=1.0, algorithm='SAMME.R')
+clf = AdaBoostClassifier(None,n_estimators=50, learning_rate=1.0, algorithm='SAMME.R')
 clf.fit(X_train,Y_train)
 a = clf.score(X_test,Y_test)
 
-print(a)
+print("The accuracy of your test data is",a)
 
 CHANNELS = 1
 RATE = 16000
@@ -129,15 +125,18 @@ for w in range(len(output_value)):
 		break
 
 
-required_stuff = np.array(output_value[value-300:value+12500])
+required_stuff = np.array(output_value[value-500:value+12300])
 
 
 mfcc_required_stuff = mfcc(required_stuff,RATE)
 reshape_required_stuff = mfcc_required_stuff.reshape(1,-1)
+# plt.plot(mfcc_required_stuff)
+# plt.title("MFCC plot of your speech signal")
+# plt.show()
 
 b = clf.predict(reshape_required_stuff)
 
-if b == 0:
-	print("Anything")
+if b == 1:
+	print("The word spoken by you is - Bread")
 else:
-	print("Bread")
+	print("The word spoken by you is - Anything")
